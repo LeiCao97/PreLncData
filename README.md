@@ -53,15 +53,15 @@
         <td>4</td>
         <td><i>A.thaliana</i></td>
         <td>positive</td>
-        <td>1500</td>
-        <td>1239</td>
+        <td>1400</td>
+        <td>1339</td>
     </tr>
     <tr align="center">
         <td></td>
         <td></td>
         <td>negative</td>
-        <td>1500</td>
-        <td>46499</td>
+        <td>1400</td>
+        <td>33345</td>
     </tr>
      <tr align="center">
         <td>5</td>
@@ -75,7 +75,7 @@
         <td></td>
         <td>negative</td>
         <td>2500</td>
-        <td>39713</td>
+        <td>33970</td>
     </tr>
      <tr align="center">
         <td>6</td>
@@ -89,6 +89,6 @@
         <td></td>
         <td>negative</td>
         <td>7500</td>
-        <td>123981</td>
+        <td>68460</td>
     </tr>
 </table>
