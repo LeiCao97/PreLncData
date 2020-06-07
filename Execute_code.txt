@@ -1,0 +1,385 @@
+CPC:
+../CPC2-beta/bin/CPC2.py -i cpc.fasta -o cpc.txt
+CPAT:
+make_hexamer_tab.py -c cdna.fasta -n lnc.fasta>hexamer.tsv
+cpat.py -g lnc.fasta -d ../CPAT-2.0.0/dat/Human_logitModel.RData -x hexamer.tsv -o cpat.txt
+
+
+awk 'BEGIN{for(i=1;i<=64;i++) sum[i]=0}{for(i=1;i<=64;i++) sum[i]+=$i} END{for(j=1;j<=64;j++) print sum[j]/NR,"\t" }' lnc.txt>avg_lnc.txt  
+awk 'BEGIN{for(i=1;i<=64;i++) sum[i]=0}{for(i=1;i<=64;i++) sum[i]+=$i} END{for(j=1;j<=64;j++) print sum[j]/NR,"\t" }' cdna.txt>avg_cdna.txt  
+
+nohup cdhit -i ../edata1/human_lnc.fa -o human_lnc.fa -c 0.9 -aS 0.9 -d 0 >run.log 2>&1 & 
+
+
+python ../../PreLnc2/createmodel_24.py -l ../train/human_lnc_train.fa -p ../train/human_pc_train.fa -r ../train/human_hexamer.tsv -o human_model.pkl
+
+
+python ../../PreLnc2/createmodel_plant35.py -l ../alldata/zma_lnc.fa -p ../../plant/plant_data/zma_pc.fa -r ../train/zma_hexamer.tsv -o zma_model.pkl
+
+python ../../PreLnc2/createmodel_plant_list.py -l ../train/ath_lnc_train.fa -p ../train/ath_pc_train.fa -r ../train/ath_hexamer.tsv -o ath_model.pkl
+
+python ../../PreLnc2/createmodel_plant_list.py -l ../train/osa_lnc_train.fa -p ../train/osa_pc_train.fa -r ../train/osa_hexamer.tsv -o osa_model.pkl
+
+python ../../PreLnc2/createmodel_plant_list.py -l ../train/zma_lnc_train.fa -p ../train/zma_pc_train.fa -r ../train/zma_hexamer.tsv -o zma_model.pkl
+
+
+nohup python review_classfiy.py >run.cow.log 2>&1 &
+
+
+
+python ../../PreLnc2/createmodel_24.py -l human_lnc_test.fa -p human_pc_test.fa -r ../train/human_hexamer.tsv -o human_model.pkl
+
+python ../../PreLnc2/createmodel_24.py -l mouse_lnc_test.fa -p mouse_pc_test.fa -r ../train/mouse_hexamer.tsv -o mouse_test24.pkl
+
+python ../../PreLnc2/createmodel_24.py -l cow_lnc_test.fa -p cow_pc_test.fa -r ../train/cow_hexamer.tsv -o cow_test24.pkl
+
+
+cpat.py -g ../human_test.fa -d Human.logit.RData -x ../../train/human_hexamer.tsv -o human_cpat_v2.txt
+cpat.py -g ../mouse_test.fa -d /root/CPAT-2.0.0/dat/Mouse_logitModel.RData -x ../../train/mouse_hexamer.tsv -o mouse_cpat.txt
+cpat.py -g ../cow_test.fa -d /root/CPAT-2.0.0/dat/cow.logit.RData -x ../../train/cow_hexamer.tsv -o cow_cpat.txt
+make_logitModel.py -x ../../train/human_hexamer.tsv -c ../../train/human_pc_train.fa -n ../../train/human_lnc_train.fa -o Human
+*****
+python /root/PreLnc2/createmodel_plant_list.py -l ../ath_lnc_test.fa -p ../ath_pc_test.fa -r ../../train/ath_hexamer.tsv -o ath_test.pkl
+python /root/PreLnc2/createmodel_plant_list.py -l ../osa_lnc_test.fa -p ../osa_pc_test.fa -r ../../train/osa_hexamer.tsv -o osa_test.pkl
+cpat.py -g ../ath_test.fa -d Ath.logit.RData -x ../../train/ath_hexamer.tsv -o ath_cpat.txt
+python /root/PreLnc2/createmodel_plant_list.py -l ../../train/ath_lnc_train.fa -p ../../train/ath_pc_train.fa -r ../../train/ath_hexamer.tsv -o ath_model.pkl
+
+
+python /root/PreLnc2/createmodel_plant_list.py -l ../train/ath_lnc_train.fa -p ../train/ath_pc_train.fa -r ../hexamer/ath_hexamer.tsv -o ath_model.pkl
+python /root/PreLnc2/createmodel_plant_list.py -l ../osa_lnc_test.fa -p ../osa_pc_test.fa -r ../../train/osa_hexamer.tsv -o osa_model.pkl
+python /root/PreLnc2/createmodel_plant_list.py -l ../zma_lnc_test.fa -p ../zma_pc_test.fa -r ../../train/zma_hexamer.tsv -o zma_model.pkl
+
+python /root/PreLnc2/createmodel_plant_list.py -l ../train/ath_lnc_train.fa -p ../train/ath_pc_train.fa -r ../hexamer/ath_hexamer.tsv -o ath_model.pkl
+python /root/PreLnc2/createmodel_plant_list.py -l ../train/osa_lnc_train.fa -p ../train/osa_pc_train.fa -r ../hexamer/osa_hexamer.tsv -o osa_model.pkl
+python /root/PreLnc2/createmodel_plant_list.py -l ../train/zma_lnc_train.fa -p ../train/zma_pc_train.fa -r ../hexamer/zma_hexamer.tsv -o zma_model.pkl
+
+python /root/PreLnc2/createmodel_plant_list.py -l ./ath.fasta.split/ath.part_001.fasta -p ../train/ath_pc_train.fa -r ../hexamer/ath_hexamer.tsv -o ath_model.pkl
+
+
+python /root/PreLnc2/createmodel_plant_list.py -l ../train/ath_lnc_train.fa -p ../train/ath_pc_train.fa -r ../hexamer/ath_hexamer.tsv -o ath_model.pkl
+
+python /root/PreLnc2/createmodel_plant35.py -l ../ath_lnc_test.fa -p ../ath_pc_test.fa -r ../../train/ath_hexamer.tsv -o ath_test35.pkl
+
+python /root/PreLnc2/createmodel_plant_list.py -l ath_lnc_train.fa -p ath_pc_train.fa -r ath_hexamer.tsv -o ath_train33
+python /root/PreLnc2/createmodel_plant_list.py -l osa_lnc_train.fa -p osa_pc_train.fa -r osa_hexamer.tsv -o osa_train33
+python /root/PreLnc2/createmodel_plant_list.py -l zma_lnc_train.fa -p zma_pc_train.fa -r zma_hexamer.tsv -o zma_train33
+
+python /root/PreLnc2/createmodel_plant_list.py -l ath_lnc_test.fa -p ath_pc_test.fa -r ../train/ath_hexamer.tsv -o ath_test33
+python /root/PreLnc2/createmodel_plant_list.py -l osa_lnc_test.fa -p osa_pc_test.fa -r ../train/osa_hexamer.tsv -o osa_test33
+python /root/PreLnc2/createmodel_plant_list.py -l zma_lnc_test.fa -p zma_pc_test.fa -r ../train/zma_hexamer.tsv -o zma_test33
+
+make_logitModel.py -x ../train/osa_hexamer.tsv -c ../train/osa_pc_train.fa -n ../train/osa_lnc_train.fa -o Osa
+cpat.py -g osa_test.fa -d Osa.logit.RData -x ../train/osa_hexamer.tsv -o osa_cpat.txt
+
+make_logitModel.py -x ../train/zma_hexamer.tsv -c ../train/zma_pc_train.fa -n ../train/zma_lnc_train.fa -o Zma
+cpat.py -g zma_test.fa -d Zma.logit.RData -x ../train/zma_hexamer.tsv -o Zma_cpat.txt
+
+/root/CPC2-beta/bin/CPC2.py -i zma_test.fa -o zma_cpc.txt
+
+python /root/PreLnc2/createmodel_plant_list.py -l ../../alldata/a.fasta -p ../train/ath_pc_train.fa -r ../train/ath_hexamer.tsv -o ath_a
+
+python /root/PreLnc2/createmodel_plant_list.py -l ../../alldata/b.fasta -p ../test/ath_pc_test.fa -r ../train/ath_hexamer.tsv -o ath_b
+
+/root/CPC2-beta/bin/CPC2.py -i ../test/ath_test.fa -o ath_cpc.txt
+
+make_logitModel.py -x ../ath_hexamer.tsv -c ../train/ath_pc_train.fa -n ../train/ath_lnc_train.fa -o ath
+cpat.py -g ../test/ath_test.fa -d ath.logit.RData -x ../ath_hexamer.tsv -o ath_cpat.txt
+
+
+
+############osa
+make_hexamer_tab.py -c pc.fa -n lnc.fa>hexamer.tsv
+seqkit sample -n 2500 -s 15 ../new_osa_pc.fa -o osa_pc_train.fa
+seqkit seq osa_pc_train.fa -i -n -o osa_pc_train_id.txt
+seqkit grep ../new_osa_pc.fa -v -f ../train/osa_pc_train_id.txt -o osa_pc_test.fa
+
+/root/CPC2-beta/bin/CPC2.py -i ../test/osa_test.fa -o osa_cpc.txt
+sed -i '1d' osa_cpc.txt
+awk '{print(1-$7)}' osa_cpc.txt >osa_cpc2.txt
+make_logitModel.py -x ../osa_hexamer.tsv -c ../train/osa_pc_train.fa -n ../train/osa_lnc_train.fa -o osa
+cpat.py -g ../test/osa_test.fa -d osa.logit.RData -x ../osa_hexamer.tsv -o osa_cpat.txt
+sed -i '1d' osa_cpat.txt
+awk '{print(1-$6)}' osa_cpat.txt >osa_cpat2.txt
+python /root/PreLnc2/createmodel_plant_list.py -l osa_lnc_train.fa -p osa_pc_train.fa -r ../osa_hexamer.tsv -o osa_train
+python /root/PreLnc2/createmodel_plant_list.py -l osa_lnc_test.fa -p osa_pc_test.fa -r ../osa_hexamer.tsv -o osa_test
+##########
+
+
+##########zma
+seqkit seq common_zma.fa -i -n -o common_zma_id.txt 
+seqkit grep zma_pc.fa -v -f common_zma_id.txt -o new_zma_pc.fa
+awk -v RS='>' 'NR>1{i++}i%2!=0{print ">"$0}' ../zma_lnc.fa|sed '/^$/d'> zma_lnc_train.fa
+awk -v RS='>' 'NR>1{i++}i%2==0{print ">"$0}' ../zma_lnc.fa|sed '/^$/d'|sed '1d'> zma_lnc_test.fa
+seqkit sample -n 7500 -s 40 ../new_zma_pc.fa -o zma_pc_train.fa
+seqkit seq zma_pc_train.fa -i -n -o zma_pc_train_id.txt
+seqkit grep ../new_zma_pc.fa -v -f ../train/zma_pc_train_id.txt -o zma_pc_test.fa
+
+/root/CPC2-beta/bin/CPC2.py -i ../test/zma_test.fa -o zma_cpc.txt
+sed -i '1d' zma_cpc.txt
+awk '{print(1-$7)}' zma_cpc.txt >zma_cpc2.txt
+make_logitModel.py -x ../zma_hexamer.tsv -c ../train/zma_pc_train.fa -n ../train/zma_lnc_train.fa -o zma
+cpat.py -g ../test/zma_test.fa -d zma.logit.RData -x ../zma_hexamer.tsv -o zma_cpat.txt
+sed -i '1d' zma_cpat.txt
+awk '{print(1-$6)}' zma_cpat.txt >zma_cpat2.txt
+python /root/PreLnc2/createmodel_plant_list.py -l zma_lnc_train.fa -p zma_pc_train.fa -r ../zma_hexamer.tsv -o zma_train
+python /root/PreLnc2/createmodel_plant_list.py -l zma_lnc_test.fa -p zma_pc_test.fa -r ../zma_hexamer.tsv -o zma_test
+##########
+
+
+python /root/othertool/PLEK.1.2/PLEKModelling.py -mRNA ../../train/cow_pc_train.fa -lncRNA ../../train/cow_lnc_train.fa -prefix cow -log2c 1,3,1 -log2g -1,-3,-1 -nfold 2 -k 4
+python /root/othertool/PLEK.1.2/PLEK.py -fasta ../../test/cow_test.fa -out cow_plek.txt -thread 10 -range cow.range -model cow.model -k 4
+awk '{print $2}' cow_plek.txt >cow_plek2.txt
+
+
+nohup python /root/othertool/PLEK.1.2/PLEKModelling.py -mRNA ../../train/human_pc_train.fa -lncRNA ../../train/human_lnc_train.fa -prefix human -log2c 1,3,1 -log2g -1,-3,-1 -nfold 2 -k 4 > human.log 2>&1 &
+python /root/othertool/PLEK.1.2/PLEK.py -fasta ../../test/human_test.fa -out human_plek.txt -thread 10 -range human.range -model human.model -k 4
+awk '{print $2}' human_plek.txt >human_plek2.txt
+
+
+nohup python /root/othertool/PLEK.1.2/PLEKModelling.py -mRNA ../../train/mouse_pc_train.fa -lncRNA ../../train/mouse_lnc_train.fa -prefix mouse -log2c 1,3,1 -log2g -1,-3,-1 -nfold 2 -k 4 > mouse.log 2>&1 &
+python /root/othertool/PLEK.1.2/PLEK.py -fasta ../../test/mouse_test.fa -out mouse_plek.txt -thread 10 -range mouse.range -model mouse.model -k 4
+awk '{print $2}' mouse_plek.txt > mouse_plek2.txt
+
+
+nohup python /root/othertool/PLEK.1.2/PLEKModelling.py -mRNA ../train/ath_pc_train.fa -lncRNA ../train/ath_lnc_train.fa -prefix ath -log2c 1,3,1 -log2g -1,-3,-1 -nfold 2 -k 4 > ath.log 2>&1 &
+python /root/othertool/PLEK.1.2/PLEK.py -fasta ../test/ath_test.fa -out ath_plek.txt -thread 10 -range ath.range -model ath.model -k 4
+awk '{print $2}' ath_plek.txt > ath_plek2.txt
+
+nohup python /root/othertool/PLEK.1.2/PLEKModelling.py -mRNA ../train/osa_pc_train.fa -lncRNA ../train/osa_lnc_train.fa -prefix osa -log2c 1,3,1 -log2g -1,-3,-1 -nfold 2 -k 4 > osa.log 2>&1 &
+python /root/othertool/PLEK.1.2/PLEK.py -fasta ../test/osa_test.fa -out osa_plek.txt -thread 10 -range osa.range -model osa.model -k 4
+awk '{print $2}' osa_plek.txt > osa_plek2.txt
+
+nohup python /root/othertool/PLEK.1.2/PLEKModelling.py -mRNA ../train/zma_pc_train.fa -lncRNA ../train/zma_lnc_train.fa -prefix zma -log2c 1,3,1 -log2g -1,-3,-1 -nfold 2 -k 4 > zma.log 2>&1 &
+python /root/othertool/PLEK.1.2/PLEK.py -fasta ../test/zma_test.fa -out zma_plek.txt -thread 10 -range zma.range -model zma.model -k 4
+awk '{print $2}' zma_plek.txt > zma_plek2.txt
+
+
+LncFinder*****************
+cow <- make_frequencies(cds.seq="../train/cow_pc_train2.fa",lncRNA.seq="../train/cow_lnc_train2.fa",SS.features = FALSE, cds.format = "DNA",lnc.format = "DNA", check.cds = TRUE, ignore.illegal = FALSE)
+
+seqkit seq ../test/human_test.fa -i -o human_test2.fa
+result_1 <- LncFinder::lnc_finder("../train/cow_pc_train2.fa", SS.features = FALSE, format = "DNA", frequencies.file = "human", svm.model = "human")
+
+
+txCdsPredict ../../new_review/alldata/test/ath_test.fa ath.cds
+perl ../RNAplonc/feature_extraction.pl ../../new_review/alldata/test/ath_test.fa ath.cds >ath.ar
+java -Xmx1024m weka.classiers.trees.J48 -l ../RNAplonc/RNAplonc.model -T ath.ar -p 0 >ath_rp.txt
+python final_column.py ath.cds ath_rp.txt.txt > ath_result
+
+
+LncFinder:
+result_1 <- LncFinder::lnc_finder("../data/human_test.fa", SS.features = FALSE, format = "DNA", frequencies.file = "human", svm.model = "human")
+
+PLIT:
+bash ../scripts/PLIT_extractFeatures_testSet.sh -testc /root/new_review/alldata/train/ath_pc_train.fa -testl /root/new_review/alldata/train/ath_lnc_train.fa -fasta /root/new_review/alldata/test/ath_test.fa -output ath_test_features.csv -scripts ../lib -b ../lib -cpat ../lib
+
+bash ../../scripts/PLIT_extractFeatures_testSet.sh -testc ../ST_mRNA_500-1.fasta -testl ../ST_lncRNA_500-1.fasta -fasta ../Test-set-sequences-ST.fasta-7.fa -output ST-features.csv -scripts ../../lib -b ../../lib -cpat ../../lib
+
+
+
+cpat.py -g NONCODEv5_human.fa -d /root/new_review/test/compare/Human.logit.RData -x /root/new_review/train/human_hexamer.tsv -o humanv5_cpat.txt
+cpat.py -g NONCODEv5_mouse.fa -d /root/CPAT-2.0.0/dat/Mouse_logitModel.RData -x /root/new_review/train/mouse_hexamer.tsv -o mousev5_cpat.txt
+cpat.py -g NONCODEv5_cow.fa -d /root/CPAT-2.0.0/dat/cow.logit.RData -x /root/new_review/train/cow_hexamer.tsv -o cowv5_cpat.txt
+sed -i '1d' humanv5_cpat.txt
+awk '{print(1-$6)}' humanv5_cpat.txt >humanv5_cpat2.txt
+sed -i '1d' mousev5_cpat.txt
+awk '{print(1-$6)}' mousev5_cpat.txt >mousev5_cpat2.txt
+sed -i '1d' cowv5_cpat.txt
+awk '{print(1-$6)}' cowv5_cpat.txt >cowv5_cpat2.txt
+
+python /root/othertool/PLEK.1.2/PLEK.py -fasta NONCODEv5_human.fa -out humanv5_plek.txt -thread 10 -range /root/new_review/alldata/plek/human.range -model /root/new_review/alldata/plek/human.model -k 4
+python /root/othertool/PLEK.1.2/PLEK.py -fasta NONCODEv5_mouse.fa -out mousev5_plek.txt -thread 10 -range /root/new_review/alldata/plek/mouse.range -model /root/new_review/alldata/plek/mouse.model -k 4
+python /root/othertool/PLEK.1.2/PLEK.py -fasta NONCODEv5_cow.fa -out cowv5_plek.txt -thread 10 -range /root/new_review/alldata/plek/cow.range -model /root/new_review/alldata/plek/cow.model -k 4
+awk '{print $2}' humanv5_plek.txt > humanv5_plek2.txt
+awk '{print $2}' mousev5_plek.txt > mousev5_plek2.txt
+awk '{print $2}' cowv5_plek.txt > cowv5_plek2.txt
+
+python ../PreLnc2/createmodel_lnc.py -l NONCODEv5_human.fa -r /root/new_review/train/human_hexamer.tsv -o human_model.pkl
+
+python ../PreLnc2/createmodel_lnc.py -l NONCODEv5_mouse.fa -r /root/new_review/train/mouse_hexamer.tsv -o mouse_model.pkl
+
+python ../PreLnc2/createmodel_lnc.py -l NONCODEv5_cow.fa -r /root/new_review/train/cow_hexamer.tsv -o cow_model.pkl
+
+../CPC2-beta/bin/CPC2.py -i NONCODEv5_cow.fa -o cowv5_cpc.txt
+sed -i '1d' cowv5_cpc.txt
+awk '{print(1-$7)}' cowv5_cpc.txt > cowv5_cpc2.txt
+
+
+
+library(BASiNET)
+arqSeqMRNA <- "../data/train/mouse_pc_train.fa"arqSeqLNCRNA <- "../data/train/mouse_lnc_train.fa"classification(mRNA=arqSeqMRNA,lncRNA=arqSeqLNCRNA, save="mouse")mRNApredict <- "../data/test/mouse_pc_test.fa"lncRNApredict <- "../data/test/mouse_lnc_test.fa"modelPredict <- "mouse.dat"result <- classification(mRNApredict,lncRNApredict,load=modelPredict)write.table(result,"mouse.txt")
+
+result_1 <- lnc_finder(Seqs, SS.features = TRUE, format = "DNA",frequencies.file = "human", svm.model = "human", parallel.cores = 10)
+
+make_logitModel.py -x mouse_hexamer.tsv -c mouse_pc_train.fa -n mouse_lnc_train.fa -o mouse
+cpat.py -g NONCODEv5_mouse.fa -d /root/new_review/train/mouse.logit.RData -x /root/new_review/train/mouse_hexamer.tsv -o mousev5_cpat.txt
+sed -i '1d' mousev5_cpat.txt
+awk '{print(1-$6)}' mousev5_cpat.txt >mousev5_cpat2.txt
+cpat.py -g mouse_test.fa -d /root/new_review/train/mouse.logit.RData -x /root/new_review/train/mouse_hexamer.tsv -o new_mouse_cpat.txt
+sed -i '1d' new_mouse_cpat.txt
+awk '{print(1-$6)}' new_mouse_cpat.txt > new_mouse_cpat2.txt
+
+cpat.py -g ath.fa -d /root/new_review/alldata/compare/ath.logit.RData -x /root/new_review/alldata/ath_hexamer.tsv -o ath_ca_cpat.txt
+cpat.py -g osa.fa -d /root/new_review/alldata/compare/osa.logit.RData -x /root/new_review/alldata/osa_hexamer.tsv -o osa_ca_cpat.txt
+cpat.py -g zma.fa -d /root/new_review/alldata/compare/zma.logit.RData -x /root/new_review/alldata/zma_hexamer.tsv -o zma_ca_cpat.txt
+sed -i '1d' ath_ca_cpat.txt 
+sed -i '1d' osa_ca_cpat.txt
+sed -i '1d' zma_ca_cpat.txt
+awk '{print(1-$6)}' ath_ca_cpat.txt > ath_ca_cpat2.txt 
+awk '{print(1-$6)}' osa_ca_cpat.txt > osa_ca_cpat2.txt 
+awk '{print(1-$6)}' zma_ca_cpat.txt > zma_ca_cpat2.txt 
+
+cpat.py -g ../human_test.fa -d /root/CPAT-2.0.0/dat/Human_logitModel.RData -x ../../train/human_hexamer.tsv -o human_cpat_new.txt
+sed -i '1d' human_cpat_new.txt
+awk '{print(1-$6)}' human_cpat_new.txt > human_cpat_new2.txt
+
+../CPC2-beta/bin/CPC2.py -i ath.fa -o ath_ca_cpc.txt
+../CPC2-beta/bin/CPC2.py -i osa.fa -o osa_ca_cpc.txt
+../CPC2-beta/bin/CPC2.py -i zma.fa -o zma_ca_cpc.txt
+sed -i '1d' ath_ca_cpc.txt 
+sed -i '1d' osa_ca_cpc.txt
+sed -i '1d' zma_ca_cpc.txt
+awk '{print(1-$7)}' ath_ca_cpc.txt > ath_ca_cpc2.txt 
+awk '{print(1-$7)}' osa_ca_cpc.txt > osa_ca_cpc2.txt 
+awk '{print(1-$7)}' zma_ca_cpc.txt > zma_ca_cpc2.txt
+
+python /root/othertool/PLEK.1.2/PLEK.py -fasta ath.fa -out ath_ca_plek.txt -thread 10 -range /root/new_review/alldata/plek/ath.range -model /root/new_review/alldata/plek/ath.model -k 4
+python /root/othertool/PLEK.1.2/PLEK.py -fasta osa.fa -out osa_ca_plek.txt -thread 10 -range /root/new_review/alldata/plek/osa.range -model /root/new_review/alldata/plek/osa.model -k 4
+python /root/othertool/PLEK.1.2/PLEK.py -fasta zma.fa -out zma_ca_plek.txt -thread 10 -range /root/new_review/alldata/plek/zma.range -model /root/new_review/alldata/plek/zma.model -k 4
+
+python ../PreLnc2/createmodel_plant_list_lnc.py -l ath.fa -r /root/new_review/alldata/ath_hexamer.tsv -o ath_model.pkl
+python ../PreLnc2/createmodel_plant_list_lnc.py -l osa.fa -r /root/new_review/alldata/osa_hexamer.tsv -o osa_model.pkl
+python ../PreLnc2/createmodel_plant_list_lnc.py -l zma.fa -r /root/new_review/alldata/zma_hexamer.tsv -o zma_model.pkl
+
+python ../PreLnc2/createmodel_plant_list_lnc.py -l NONCODEv5_arabidopsis.fa -r /root/new_review/alldata/ath_hexamer.tsv -o ath_model.pkl
+
+###################################
+library("LncFinder")
+library('seqinr')
+seqs <- read.fasta("../test/human_test.fa")
+result_1 <- lnc_finder(seqs, SS.features = FALSE, format = "DNA",frequencies.file = "human", svm.model = "human", parallel.cores = 15)
+write.table(result_1,"human_lncfinder.txt")
+
+seqs2 <- read.fasta("../test/mouse_test.fa")
+result_2 <- lnc_finder(seqs2, SS.features = FALSE, format = "DNA",frequencies.file = "mouse", svm.model = "mouse", parallel.cores = 15)
+write.table(result_2,"mouse_lncfinder.txt")
+sed '1d' human_lncfinder.txt > human_lncfinder2.txt
+awk '{print $2}' human_lncfinder2.txt > human_lncfinder3.txt
+sed '1d' mouse_lncfinder.txt > mouse_lncfinder2.txt
+awk '{print $2}' mouse_lncfinder2.txt > mouse_lncfinder3.txt
+
+library("LncFinder")
+library('seqinr')
+human_pc <- read.fasta("../train/human_pc_train.fa")
+human_lnc <- read.fasta("../train/human_lnc_train.fa")
+my_file_1 <- make_frequencies(cds.seq = human_pc, lncRNA.seq = human_lnc,SS.features = FALSE, cds.format = "DNA", lnc.format = "DNA", check.cds = TRUE, ignore.illegal = FALSE)
+human_model <- build_model(human_lnc, human_pc, my_file_1, SS.features = FALSE, lncRNA.format = "DNA", mRNA.format = "DNA", parallel.cores = 28, folds.num = 10, seed = 1, gamma.range = (2^seq(-5, 0, 1)),cost.range = c(1, 4))
+human_fa <- read.fasta("../test/human_test.fa")
+human_test <- lnc_finder(human_fa, SS.features = FALSE, format = "DNA",frequencies.file = my_file_1, svm.model = human_model, parallel.cores = 20)
+write.table(human_test,"human_lncfinder_mydata.txt")
+sed '1d' human_lncfinder_mydata.txt > human_lncfinder_mydata2.txt
+awk '{print $2}' human_lncfinder_mydata2.txt > human_lncfinder_mydata3.txt
+
+library("LncFinder")
+library('seqinr')
+mouse_pc <- read.fasta("../train/mouse_pc_train.fa")
+mouse_lnc <- read.fasta("../train/mouse_lnc_train.fa")
+my_file_1 <- make_frequencies(cds.seq = mouse_pc, lncRNA.seq = mouse_lnc,SS.features = FALSE, cds.format = "DNA", lnc.format = "DNA", check.cds = TRUE, ignore.illegal = FALSE)
+mouse_model <- build_model(mouse_lnc, mouse_pc, my_file_1, SS.features = FALSE, lncRNA.format = "DNA", mRNA.format = "DNA", parallel.cores = 28, folds.num = 10, seed = 1, gamma.range = (2^seq(-5, 0, 1)),cost.range = c(1,4))
+mouse_fa <- read.fasta("../test/mouse_test.fa")
+mouse_test <- lnc_finder(mouse_fa, SS.features = FALSE, format = "DNA",frequencies.file = my_file_1, svm.model = mouse_model, parallel.cores = 20)
+write.table(mouse_test,"mouse_lncfinder_mydata.txt")
+sed '1d' mouse_lncfinder_mydata.txt > mouse_lncfinder_mydata2.txt
+awk '{print $2}' mouse_lncfinder_mydata2.txt > mouse_lncfinder_mydata3.txt
+
+library("LncFinder")
+library('seqinr')
+cow_pc <- read.fasta("../train/cow_pc_train.fa")
+cow_lnc <- read.fasta("../train/cow_lnc_train.fa")
+my_file_1 <- make_frequencies(cds.seq = cow_pc, lncRNA.seq = cow_lnc,SS.features = FALSE, cds.format = "DNA", lnc.format = "DNA", check.cds = TRUE, ignore.illegal = FALSE)
+cow_model <- build_model(cow_lnc, cow_pc, my_file_1, SS.features = FALSE, lncRNA.format = "DNA", mRNA.format = "DNA", parallel.cores = 28, folds.num = 10, seed = 1, gamma.range = (2^seq(-5, 0, 1)),cost.range = c(1,4))
+cow_fa <- read.fasta("../test/cow_test.fa")
+cow_test <- lnc_finder(cow_fa, SS.features = FALSE, format = "DNA",frequencies.file = my_file_1, svm.model = cow_model, parallel.cores = 20)
+write.table(cow_test,"cow_lncfinder_mydata.txt")
+sed '1d' cow_lncfinder_mydata.txt > cow_lncfinder_mydata2.txt
+awk '{print $2}' cow_lncfinder_mydata2.txt > cow_lncfinder_mydata3.txt
+
+library("LncFinder")
+library('seqinr')
+humanv5 <- read.fasta("../test/NONCODEv5_human.fa")
+result <- lnc_finder(humanv5, SS.features=FALSE, format = "DNA",frequencies.file="human", svm.model = "human", parallel.cores = 20)
+write.table(result,"humanv5_lncfinder1.txt")
+humanv52 <- read.fasta("../test/NONCODEv5_human.fa.split/NONCODEv5_human.part_002.fa")
+result2 <- lnc_finder(humanv52, SS.features=FALSE, format = "DNA",frequencies.file="human", svm.model = "human", parallel.cores = 20)
+write.table(result2,"humanv5_lncfinder2.txt")
+humanv53 <- read.fasta("../test/NONCODEv5_human.fa.split/NONCODEv5_human.part_003.fa")
+result3 <- lnc_finder(humanv53, SS.features=FALSE, format = "DNA",frequencies.file="human", svm.model = "human", parallel.cores = 20)
+write.table(result3,"humanv5_lncfinder3.txt")
+
+library("LncFinder")
+library('seqinr')
+mousev5 <- read.fasta("../test/NONCODEv5_mouse.fa")
+result <- lnc_finder(mousev5, SS.features=FALSE, format = "DNA",frequencies.file="human", svm.model = "human", parallel.cores = 20)
+write.table(result,"mousev5_lncfinder.txt")
+
+library("LncFinder")
+library('seqinr')
+humanv5 <- read.fasta("../test/NONCODEv5_human.fa")
+result <- lnc_finder(humanv5, SS.features=FALSE, format = "DNA",frequencies.file="human", svm.model = "human", parallel.cores = 20)
+write.table(result,"humanv5_lncfinder.txt")
+
+sed '1d' mousev5_lncfinder.txt > mousev5_lncfinder2.txt
+awk '{print $2}' mousev5_lncfinder2.txt > mousev5_lncfinder3.txt
+
+library("LncFinder")
+library('seqinr')
+ath_pc <- read.fasta("../train/ath_pc_train.fa")
+ath_lnc <- read.fasta("../train/ath_lnc_train.fa")
+my_file_1 <- make_frequencies(cds.seq = ath_pc, lncRNA.seq = ath_lnc,SS.features = FALSE, cds.format = "DNA", lnc.format = "DNA", check.cds = TRUE, ignore.illegal = FALSE)
+ath_model <- build_model(ath_lnc, ath_pc, my_file_1, SS.features = FALSE, lncRNA.format = "DNA", mRNA.format = "DNA", parallel.cores = 28, folds.num = 10, seed = 1, gamma.range = (2^seq(-5, 0, 1)),cost.range = c(1,4))
+athv5 <- read.fasta("../test/ath_test.fa")
+result <- lnc_finder(athv5, SS.features=FALSE, format = "DNA",frequencies.file=my_file_1, svm.model = ath_model, parallel.cores = 20)
+write.table(result,"athv5_lncfinder.txt")
+
+library("LncFinder")
+library('seqinr')
+osa_pc <- read.fasta("../train/osa_pc_train.fa")
+osa_lnc <- read.fasta("../train/osa_lnc_train.fa")
+my_file_1 <- make_frequencies(cds.seq = osa_pc, lncRNA.seq = osa_lnc,SS.features = FALSE, cds.format = "DNA", lnc.format = "DNA", check.cds = TRUE, ignore.illegal = FALSE)
+osa_model <- build_model(osa_lnc, osa_pc, my_file_1, SS.features = FALSE, lncRNA.format = "DNA", mRNA.format = "DNA", parallel.cores = 28, folds.num = 10, seed = 1, gamma.range = (2^seq(-5, 0, 1)),cost.range = c(1,4))
+osav5 <- read.fasta("../test/osa_test.fa")
+result <- lnc_finder(osav5, SS.features=FALSE, format = "DNA",frequencies.file=my_file_1, svm.model = osa_model, parallel.cores = 20)
+write.table(result,"osav5_lncfinder.txt")
+
+library("LncFinder")
+library('seqinr')
+zma_pc <- read.fasta("../train/zma_pc_train.fa")
+zma_lnc <- read.fasta("../train/zma_lnc_train.fa")
+my_file_1 <- make_frequencies(cds.seq = zma_pc, lncRNA.seq = zma_lnc,SS.features = FALSE, cds.format = "DNA", lnc.format = "DNA", check.cds = TRUE, ignore.illegal = FALSE)
+zma_model <- build_model(zma_lnc, zma_pc, my_file_1, SS.features = FALSE, lncRNA.format = "DNA", mRNA.format = "DNA", parallel.cores = 28, folds.num = 10, seed = 1, gamma.range = (2^seq(-5, 0, 1)),cost.range = c(1,4))
+zmav5 <- read.fasta("../test/zma_test.fa")
+result <- lnc_finder(zmav5, SS.features=FALSE, format = "DNA",frequencies.file=my_file_1, svm.model = zma_model, parallel.cores = 20)
+write.table(result,"zmav5_lncfinder.txt")
+
+
+library("LncFinder")
+library('seqinr')
+humanv5 <- read.fasta("./cpc-human.fa")
+result <- lnc_finder(humanv5, SS.features=FALSE, format = "DNA",frequencies.file="human", svm.model = "human", parallel.cores = 1)
+write.table(result,"cpc_human_lncfinder.txt")
+
+library("LncFinder")
+library('seqinr')
+humanv5 <- read.fasta("./cpc-mouse.fa")
+result <- lnc_finder(humanv5, SS.features=FALSE, format = "DNA",frequencies.file="mouse", svm.model = "mouse", parallel.cores = 1)
+write.table(result,"cpc_mouse_lncfinder.txt")
+
+library("LncFinder")
+library('seqinr')
+ath_pc <- read.fasta("../train/ath_pc_train.fa")
+ath_lnc <- read.fasta("../train/ath_lnc_train.fa")
+my_file_1 <- make_frequencies(cds.seq = ath_pc, lncRNA.seq = ath_lnc,SS.features = FALSE, cds.format = "DNA", lnc.format = "DNA", check.cds = TRUE, ignore.illegal = FALSE)
+ath_model <- build_model(ath_lnc, ath_pc, my_file_1, SS.features = FALSE, lncRNA.format = "DNA", mRNA.format = "DNA", parallel.cores = 28, folds.num = 10, seed = 1, gamma.range = (2^seq(-5, 0, 1)),cost.range = c(1,4))
+cpc_ath <- read.fasta("cpc-ath.fa")
+result <- lnc_finder(cpc_ath, SS.features=FALSE, format = "DNA",frequencies.file=my_file_1, svm.model = ath_model, parallel.cores = 1)
+write.table(result,"cpc_ath_lncfinder.txt")
