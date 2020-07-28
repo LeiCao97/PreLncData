@@ -163,23 +163,6 @@ result <- lnc_finder(cpc_ath, SS.features=FALSE, format = "DNA",frequencies.file
 write.table(result,"cpc_ath_lncfinder.txt")
 
 
-############################BASiNET############################
-library(BASiNET)mRNApredict <- "human_pc_train.fa"lncRNApredict <- "human_lnc_train.fa"modelPredict <- system.file("extdata", "modelPredict.dat", package = "BASiNET")result <- classification(mRNApredict,lncRNApredict,load=modelPredict)write.table(result,"human.txt")
-
-library(BASiNET)mRNApredict <- "mouse_pc_train.fa"lncRNApredict <- "mouse_lnc_train.fa"modelPredict <- system.file("extdata", "modelPredict.dat", package = "BASiNET")result <- classification(mRNApredict,lncRNApredict,load=modelPredict)write.table(result,"mouse.txt")
-
-library(BASiNET)
-arqSeqMRNA <- "../data/train/cow_pc_train.fa"arqSeqLNCRNA <- "../data/train/cow_lnc_train.fa"classification(mRNA=arqSeqMRNA,lncRNA=arqSeqLNCRNA, save="cow")mRNApredict <- "../data/test/cow_pc_test.fa"lncRNApredict <- "../data/test/cow_lnc_test.fa"modelPredict <- "cow.dat"result <- classification(mRNApredict,lncRNApredict,load=modelPredict)write.table(result,"cow.txt")
-
-library(BASiNET)
-arqSeqMRNA <- "../data/train/ath_pc_train.fa"arqSeqLNCRNA <- "../data/train/ath_lnc_train.fa"classification(mRNA=arqSeqMRNA,lncRNA=arqSeqLNCRNA, save="ath")mRNApredict <- "../data/test/ath_pc_test.fa"lncRNApredict <- "../data/test/ath_lnc_test.fa"modelPredict <- "ath.dat"result <- classification(mRNApredict,lncRNApredict,load=modelPredict)write.table(result,"ath.txt")
-
-library(BASiNET)
-arqSeqMRNA <- "../data/train/osa_pc_train.fa"arqSeqLNCRNA <- "../data/train/osa_lnc_train.fa"classification(mRNA=arqSeqMRNA,lncRNA=arqSeqLNCRNA, save="osa")mRNApredict <- "../data/test/osa_pc_test.fa"lncRNApredict <- "../data/test/osa_lnc_test.fa"modelPredict <- "osa.dat"result <- classification(mRNApredict,lncRNApredict,load=modelPredict)write.table(result,"osa.txt")
-
-library(BASiNET)
-arqSeqMRNA <- "../data/train/zma_pc_train.fa"arqSeqLNCRNA <- "../data/train/zma_lnc_train.fa"classification(mRNA=arqSeqMRNA,lncRNA=arqSeqLNCRNA, save="zma")mRNApredict <- "../data/test/zma_pc_test.fa"lncRNApredict <- "../data/test/zma_lnc_test.fa"modelPredict <- "zma.dat"result <- classification(mRNApredict,lncRNApredict,load=modelPredict)write.table(result,"zma.txt")
-
 
 ############################RNAplonc############################
 txCdsPredict ../test/ath_test.fa ath_test.cds
