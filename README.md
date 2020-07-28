@@ -98,7 +98,6 @@ CPAT:http://code.google.com/p/cpat/
 CPC2:http://cpc2.cbi.pku.edu.cn/download.php   
 PLEK:https://sourceforge.net/projects/plek/files/    
 LncFinder:https://cran.r-project.org/package=LncFinder    
-BASiNET:https://cran.r-project.org/web/packages/BASiNET/index.html   
 RNAplonc:https://github.com/TatianneNegri/RNAplonc/   
 PLncPRO:http://ccbb.jnu.ac.in/plncpro/index.html#page-top   
 
