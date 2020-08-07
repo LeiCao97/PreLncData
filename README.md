@@ -103,4 +103,11 @@ PLncPRO:http://ccbb.jnu.ac.in/plncpro/index.html#page-top
 
 # Prediction on other known datasets
 CPC2 dataset:http://cpc2.cbi.pku.edu.cn/help/data_set.php   
-NONCODE dataset:http://www.noncode.org/download.php
+NONCODE dataset:http://www.noncode.org/download.php    
+Aedes aegypti dataset:   
+https://www.nature.com/articles/s41598-019-47506-9
+https://www.ncbi.nlm.nih.gov/nuccore/NC_035107.1?report=fasta&log$=seqview    
+https://www.ncbi.nlm.nih.gov/nuccore/NC_035108.1?report=fasta&log$=seqview    
+https://www.ncbi.nlm.nih.gov/nuccore/NC_035109.1?report=fasta&log$=seqview      
+
+
